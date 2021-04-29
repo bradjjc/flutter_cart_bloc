@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_cart_bloc/bloc/cart_bloc.dart';
-import 'package:flutter_cart_bloc/item.dart';
-
+import 'package:flutter_cart_bloc/working/item.dart';
 
 class Cart extends StatefulWidget {
   @override
@@ -10,10 +9,8 @@ class Cart extends StatefulWidget {
 }
 
 class _CartState extends State<Cart> {
-
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
         title: Text('Cart'),

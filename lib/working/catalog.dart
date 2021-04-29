@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_cart_bloc/bloc/cart_bloc.dart';
-import 'package:flutter_cart_bloc/cart.dart';
-import 'package:flutter_cart_bloc/item.dart';
-
+import 'package:flutter_cart_bloc/bloc/cart_provider.dart';
+import 'package:flutter_cart_bloc/working/cart.dart';
+import 'package:flutter_cart_bloc/working/item.dart';
 
 class Catalog extends StatefulWidget {
   @override
@@ -15,6 +15,8 @@ class _CatalogState extends State<Catalog> {
 
   @override
   Widget build(BuildContext context) {
+    CartBloc cartBloc = CartProvider.of(context);
+
     final _cartBloc = BlocProvider.of<CartBloc>(context);
 
     return Scaffold(
@@ -22,12 +24,12 @@ class _CatalogState extends State<Catalog> {
         title: Text('Catalog'),
         actions: <Widget>[
           IconButton(
-              icon: Icon(Icons.archive),
-              onPressed: () {
-                Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (_) => Cart()));
-              },
-              )
+            icon: Icon(Icons.archive),
+            onPressed: () {
+              Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (_) => Cart()));
+            },
+          )
         ],
       ),
       body: BlocBuilder<CartBloc, List<Item>>(
@@ -36,7 +38,7 @@ class _CatalogState extends State<Catalog> {
           return Center(
             child: ListView(
               children: _itemList
-                  .map((item) => _builItem(item, state, _cartBloc))
+                  .map((item) => _buildItem(item, state, _cartBloc))
                   .toList(),
             ),
           );
@@ -45,34 +47,28 @@ class _CatalogState extends State<Catalog> {
     );
   }
 
-  Widget _builItem(Item item, List state, CartBloc bloc) {
-    final isChecked = state.contains(item);
-
+  Widget _buildItem(Item todo, List state, CartBloc bloc) {
+    final isChecked = state.contains(todo);
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: ListTile(
-        title: Text(
-          item.title,
-          style: TextStyle(fontSize: 31.0),
-        ),
-        subtitle: Text(
-            '${item.price}'),
+        subtitle: Text('${todo.price}'),
         trailing: IconButton(
             icon: isChecked
-            ? Icon(
-              Icons.check,
-              color: Colors.red,
-              )
-            : Icon(Icons.check),
-          onPressed: () {
-            setState(() {
+                ? Icon(
+                    Icons.check,
+                    color: Colors.red,
+                  )
+                : Icon(Icons.check),
+            onPressed: () {
+              setState(() {
                 if (isChecked) {
-                    bloc.add(CartEvent(CartEventType.remove, item));
+                  bloc.add(CartEvent(CartEventType.remove, todo));
                 } else {
-                    bloc.add(CartEvent(CartEventType.add, item));
+                  bloc.add(CartEvent(CartEventType.add, todo));
                 }
-            });
-          }),
+              });
+            }),
         title: Text(
           todo.title,
           style: TextStyle(fontSize: 31.0),
